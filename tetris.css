@@ -1,0 +1,71 @@
+canvas{
+  background-color: #293132;
+}
+
+*{
+  margin: 0px ;
+  background-color: #ebed3;
+}
+body
+{
+  background-color : #c79081;
+}
+@import "http://fonts.googleapis.com/css?family=Arvo";
+/* Above line is used for online Google font */
+hr{
+border:0;
+border-top:1px solid #ccc;
+margin-bottom:-10px
+}
+div#main{
+width:828px;
+height:764px;
+margin:0 auto;
+font-family:'Arvo',serif
+}
+div#first{
+width:350px;
+height:740px;
+padding:0 25px 20px;
+float:left;
+text-align:center
+}
+.btn{
+width:260px;
+height:50px;
+margin-left:45px
+}
+.btn1{
+width:260px;
+height:85px;
+margin-left:42px
+}
+.button1{
+width:250px;
+height:45px;
+border:none;
+outline:none;
+box-shadow:0 3px 2px 0 #2c80a2;
+color:#fff;
+font-size:14px;
+text-shadow:0 1px rgba(0,0,0,0.4);
+background-color:#3fb8e8;
+font-weight:700;
+background-image:url(../images/1.png);
+background-repeat:no-repeat;
+background-position:200px
+}
+.button1:hover{
+background-color:#1baae3;
+cursor:pointer
+}
+.button1:active{
+padding-top:2px;
+box-shadow:none
+}
+
+form {
+  position : absolute;
+  right : 0px;
+  top : 10px;
+}
