@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tetris</title>
+</head>
+<style type="text/css">
+	canvas{
+  background-color: #293132;
+}
+
+*{
+  margin: 0px ;
+  background-color: #ebed3;
+}
+body
+{
+  background-color : #c79081;
+}
+@import "http://fonts.googleapis.com/css?family=Arvo";
+/* Above line is used for online Google font */
+hr{
+border:0;
+border-top:1px solid #ccc;
+margin-bottom:-10px
+}
+div#main{
+width:828px;
+height:764px;
+margin:0 auto;
+font-family:'Arvo',serif
+}
+div#first{
+width:350px;
+height:740px;
+padding:0 25px 20px;
+float:left;
+text-align:center
+}
+.btn{
+width:260px;
+height:50px;
+margin-left:45px
+}
+.btn1{
+width:260px;
+height:85px;
+margin-left:42px
+}
+.button1{
+width:250px;
+height:45px;
+border:none;
+outline:none;
+box-shadow:0 3px 2px 0 #2c80a2;
+color:#fff;
+font-size:14px;
+text-shadow:0 1px rgba(0,0,0,0.4);
+background-color:#3fb8e8;
+font-weight:700;
+background-image:url(../images/1.png);
+background-repeat:no-repeat;
+background-position:200px
+}
+.button1:hover{
+background-color:#1baae3;
+cursor:pointer
+}
+.button1:active{
+padding-top:2px;
+box-shadow:none
+}
+
+form {
+  position : absolute;
+  right : 0px;
+  top : 10px;
+}
+</style>
+<body>
+
+<center>
+<canvas id="screen" width="355" height="670"></canvas>
+</center>
+
+<div id="main">
+<div id="first">
+</div>
+</div>
+<script type="text/javascript">
+	var canvas = document.getElementById("screen");
+var ctx = canvas.getContext( "2d" ) ;
+var color1 = "#56A3A6" ; //L
+var color2 = "#04a777" ; //_|
+var color3 = "#474044" ; //|
+var color4 = "#4f5165" ; //z
+var color5 = "#1446a0" ; //_|-
+var color6 = "#f5d547 " ; //||
+var color7 = "#DB3069" ;    //_|_
+
+var columns = 10 ;
+var rows = 20 ;
+var boxWidth  = 30 ;
+var boxHeight = 30 ;
+var padding = 5 ;
+
+class Tetris{
+  //construct with random int from 1 - 6 
+  refresh( num ){
+    switch( num ) {
+      case 1:
+        this.color = color1 ;
+        this.position = [ 
+          [ {x:0 , y:0 } , { x:0, y:1 } , { x:0, y:2 } , { x:1, y:2 } ] ,
+          [ {x:0 , y:1 } , { x:1 , y:1 } , { x:2 , y:1 } , { x:2 , y:0 } ] ,
+          [ {x:0 , y:0 } , {x:1,y:0} , {x:1,y:1} , {x:1,y:2} ] ,
+          [ {x:0 , y:0} , {x:0,y:1} , {x:1,y:0} , {x:2,y:0} ] 
+                        ] ;
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 4 ;
+        break ;
+      case 2:
+        this.color = color2 ;
+        this.position = [ 
+          [ { x:1, y:0 } , { x:1, y:1 } ,{ x:1, y:2 } , { x:0, y:2 } ] ,
+          [ {x:0 , y:0 } , { x:1 , y:0 } , { x:2 , y:1 } , { x:2 , y:0 } ] ,
+          [ {x:0 , y:0 } , {x:1,y:0} , {x:0,y:1} , {x:0,y:2} ] ,
+          [ {x:0 , y:0} , {x:0,y:1} , {x:1,y:1} , {x:2,y:1} ] 
+                        ] ;
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 4 ;
+        break ;
+      case 3:
+        this.color = color3 ;
+        this.position = [ 
+          [ { x:0, y:0 } , { x:0, y:1} ,{ x:0, y:2} , {x:0, y:3}] ,
+          [ { y:0, x:0 } , { y:0, x:1} ,{ y:0, x:2} , {y:0, x:3}] 
+                        ] ;
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 2 ;
+        break ;
+      case 4:
+        this.color = color4 ;
+        this.position = [ 
+          [ { x:0, y:0} , {x:1, y:0} , {x:1, y:1} , {x:2, y:1}] ,
+          [ {x:1,y:0} , {x:1,y:1} , {x:0,y:1} , {x:0,y:2} ]
+                        ];
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 2 ;
+        break ;
+      case 5:
+        this.color = color5 ;
+        this.position = [
+          [ { x:0, y:1 },  { x:1, y:0} , { x:1,y:1} , { x:2, y:0} ]  ,
+          [ {x:0,y:0} , {x:0,y:1} , {x:1,y:1} , {x:1,y:2} ]
+                        ] ;
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 2 ;
+        break ;
+      case 6:
+        this.color = color6 ;
+        this.position = [[ { x:0,y:0} ,
+                         { x:1, y:0} , 
+                         { x:0, y:1} , 
+                         {x:1, y:1} 
+                        ]] ;
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 1 ;
+        break ;
+      case 7:
+        this.color = color7 ;
+        this.position = [
+          [ { x:0,y:1} ,{ x:1, y:1} ,{ x:2, y:1} , {x:1, y:0} ] ,
+          [ { x:0,y:1} ,{ x:1, y:1} ,{ y:2, x:1} , {x:1, y:0} ] ,
+          [ { x:0,y:0} ,{ x:1, y:1} ,{ x:2, y:0} , {x:1, y:0} ] ,
+          [ { x:0,y:0} ,{ x:1, y:1} ,{ x:0, y:1} , {x:0, y:2} ] 
+                        ];
+        this.dy = 0 ;
+        this.dx = 4 ;
+        this.rotation = 0 ;
+        this.types = 4 ;
+        break ;
+    }
+  }
+ 
+  move(  ){
+      this.dy += 1 ;
+  }
+  
+  left(){
+       this.dx -= 1 ;
+  }
+  
+  right(){
+      this.dx += 1 ;
+  }
+  
+  rotate(){
+    this.rotation ++ ;
+  }
+  
+  draw(){
+    for( var i = 0 ; i < this.position[ this.rotation % this.types ].length ; ++i ){
+      ctx.beginPath() ;
+      ctx.rect( this.position[ this.rotation % this.types ] [i].x * ( boxWidth + padding ) + this.dx * ( boxWidth + padding ) + padding , this.position[ this.rotation % this.types ][i].y * ( boxHeight + padding ) + padding + this.dy * ( boxWidth + padding ) , boxWidth , boxHeight) ;
+      ctx.fillStyle = this.color ;
+      ctx.fill() ;
+      ctx.closePath() ;
+    }
+  }
+}
+
+//game logic 
+
+//init board 
+class Board{ 
+  //data members grid 2d array and inPlay (referring to peice )
+  //constructor
+  refresh(){
+    this.grid = [] ;
+    for( var i = 0 ; i < columns ; ++i ){
+      this.grid[i] = [] ;
+      for( var j = 0 ; j < rows ; ++j ){
+        this.grid[i][j] = { bool: false , color: "#fff" } ;
+      }
+    }
+    this.inPlay = false ;
+    this.alive = true ;
+  }
+  
+  //checkStatus
+  checkStatus(){
+    for( var i = 0 ; i < this.grid.length ; ++i ){
+      if( this.grid[i][0].bool == true ){
+        this.alive = false ;
+      }
+    }
+  }
+  
+  //clearLines
+  
+  
+  //draw board 
+  draw(){
+    for( var i = 0 ; i < board.grid.length ; ++i ){
+      for( var j = 0 ; j < board.grid[i].length ; ++ j ){
+        if( this.grid[i][j].bool ){
+          ctx.beginPath() ;
+          ctx.rect( padding + i * ( padding + boxWidth ) , padding + j * ( padding + boxHeight ) , boxWidth , boxHeight ) ;
+          ctx.fillStyle = this.grid[i][j].color ;
+          ctx.fill() ;
+          ctx.closePath() ;
+        }
+      }
+    } 
+  }
+}
+
+document.addEventListener( "keydown" , keyDownHandler , false ) ;
+document.addEventListener( "keyup" , keyUpHandler , false ) ;
+var rightPressed = false ;
+var leftPressed = false ;
+var upPressed = false ;
+
+function keyUpHandler( e ){
+  if( e.keyCode == 39 ){
+    rightPressed = false ;
+  }
+  else if( e.keyCode == 37 ){
+    leftPressed = false  ;
+  }
+  else if( e.keyCode == 38 ){
+    upPressed = false ;
+  }
+}
+
+function keyDownHandler( e ){
+  if( e.keyCode == 39 ){
+    rightPressed = true ;
+  }
+  else if( e.keyCode == 37 ){
+    leftPressed = true ;
+  }
+  else if( e.keyCode == 38 ){
+    upPressed = true ;
+  }
+}
+
+var board = new Board() ;
+board.refresh() ;
+
+var tetris1 = new Tetris( ) ;
+tetris1.refresh( 1 ) ;
+
+var dx = 0 ;
+var dy = 0 ;
+
+
+function alive(){
+  if( board.inPlay ){
+    inPlayMethod() ;
+  }  
+  else{ //inPlay == false
+    spawn() ;
+  }
+}
+
+function inPlayMethod(){
+  update( ) ;
+  draw( ) ;
+}
+//
+//inPlayMethod submethods
+//
+function draw(){
+  ctx.clearRect( 0 , 0 , canvas.width , canvas.height ) ;
+  tetris1.draw( ) ;
+  board.draw() ;
+}
+
+function update(){
+  if( collisionY() ){
+    addTetris() ; 
+  }
+  else{
+    tetris1.move() ;
+  }
+
+}
+
+function collisionY(){
+  for( var i = 0 ; i < tetris1.position[ tetris1.rotation % tetris1.types ].length ; ++ i ){
+    if( board.grid[ tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx ][ tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy + 1 ].bool == true || tetris1.position[ tetris1.rotation % tetris1.types ][i].y + 1 + tetris1.dy == rows - 1 ){
+      //board.grid[i][j].bool = true  
+      return true ;
+    }
+  }
+}
+
+function collisionR(){
+  for( var i = 0 ; i < tetris1.position[ tetris1.rotation % tetris1.types ].length ; ++ i ){
+    if( board.grid[ tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx + 1 ][ tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy ].bool == true || tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx + 1 == columns ){
+      //board.grid[i][j].bool = true  
+      return true ;
+    }
+  }
+}
+
+function collisionL(){
+  for( var i = 0 ; i < tetris1.position[ tetris1.rotation % tetris1.types ].length ; ++ i ){
+    if( board.grid[ tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx - 1 ][ tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy ].bool == true || tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx -1 < 0 ){
+      //board.grid[i][j].bool = true  
+      return true ;
+    }
+  }
+}
+
+function collisionRotate(){
+  for( var i = 0 ; i < tetris1.position[ tetris1.rotation % tetris1.types ].length ; ++ i ){
+    if( board.grid[ tetris1.position[ ( tetris1.rotation + 1 )% tetris1.types  ][i].x + tetris1.dx ][ tetris1.position[ ( tetris1.rotation + 1 ) % tetris1.types ][i].y + tetris1.dy ].bool == true || tetris1.position[ ( tetris1.rotation + 1 ) % tetris1.types ][i].x + tetris1.dx < 0 || tetris1.position[ ( tetris1.rotation + 1 ) % tetris1.types ][i].x + tetris1.dx > columns || tetris1.position[ ( tetris1.rotation + 1 ) % tetris1.types ][i].y + tetris1.dy < 0 || tetris1.position[ ( tetris1.rotation + 1 ) % tetris1.types ][i].y + tetris1.dy > rows ){
+      //board.grid[i][j].bool = true  
+      return true ;
+    }
+  }
+  
+}
+
+//optimization only check for loss when adding peice to board
+function addTetris(){
+  board.inPlay = false ;
+  for( var i = 0 ; i < tetris1.position[ tetris1.rotation % tetris1.types ].length ; ++ i ){
+    board.grid[ tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx ][ tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy ].bool = true ;
+    board.grid[ tetris1.position[ tetris1.rotation % tetris1.types ][i].x + tetris1.dx ][ tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy ].color= tetris1.color  ;
+    checkLine( tetris1.position[ tetris1.rotation % tetris1.types ][i].y + tetris1.dy  ) ;
+  }
+  board.checkStatus() ;
+}
+
+//sorry I couldn't get forEach or every to work... it was probably because of varriable scoping issues
+function checkLine( num ){
+  if( board.grid[0][num].bool && board.grid[1][num].bool &&board.grid[2][num].bool &&board.grid[3][num].bool &&board.grid[4][num].bool &&board.grid[5][num].bool &&board.grid[6][num].bool &&board.grid[7][num].bool &&board.grid[8][num].bool &&board.grid[9][num].bool ){
+    board.grid.forEach( function( element ){
+      element.splice( num , 1 ) ;
+      element.unshift( {bool:false, color: "#FFF" } ) ;
+    });
+  }
+}
+
+//
+//inPlayMethod submethods
+//
+
+function spawn(){
+  tetris1.refresh( Math.ceil( Math.random() * 7 ) ) ;
+  board.inPlay = true ;
+}
+
+function dead(){
+  board.refresh() ;
+  tetris1.refresh( Math.ceil( Math.random() * 7 ) ) ;
+}
+
+function main(){
+  if( rightPressed && !collisionR() ){
+    tetris1.right() ;
+  }
+  else if( leftPressed && !collisionL() ){
+    tetris1.left() ;
+  }
+  else if( upPressed && !collisionRotate()  ){
+    tetris1.rotate() ;
+  }
+  if( board.alive ){
+    alive() ;
+  } 
+  else{
+    dead() ;
+  }
+//  update( tetris1 ) ;
+ // draw( tetris1 ) ;
+}
+
+setInterval( main , 100) ;
+
+</script>
+</body>
+</html>
